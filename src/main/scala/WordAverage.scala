@@ -24,11 +24,11 @@ object WordAverage {
         // Υπολογισμός του μέσου όρου του μήκους των λέξεων για κάθε γράμμα
         val averageLengths = firstWordLetters
             .combineByKey(
-                (valueCount) => (valueCount, 1), // Μέτρηση των εμφανίσεων του κάθε γράμματος
+                (valueCount) => (valueCount, 1), // Δημιουργία του combiner. Αρχικοποίηση της τιμής του κάθε κλειδιού
                 (acc: (Int, Int), valueCount) => (acc._1 + valueCount, acc._2 + 1), // Υπολογισμός του αθροίσματος των μηκών των λέξεων και αύξηση του μετρητή
-                (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2) // Επιστροφή των αθροισμάτων και των μετρητών
-            )
-            .mapValues(sumAndCount => f"${sumAndCount._1.toDouble / sumAndCount._2.toDouble}%.1f") // Υπολογισμός μέσου όρου
+                (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2) // Συνένωση των αθροισμάτων και των μετρητών από τα partitions
+            ) // Το αποτέλεσμα είναι στη μορφή (firstLetter, (sumOfLengths, countOfWords))
+            .mapValues(sumAndCount => f"${sumAndCount._1.toDouble / sumAndCount._2.toDouble}%.1f") // Υπολογισμός μέσου όρου, με βάση τα sumOfLengths, countOfWords
 
         // Τελική ταξινόμηση και εξαγωγή σε αρχείο
         averageLengths.sortByKey()
