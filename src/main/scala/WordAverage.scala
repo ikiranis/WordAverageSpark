@@ -16,9 +16,9 @@ object WordAverage {
 
         // Παίρνει το πρώτο γράμμα κάθε λέξης και το μήκος της λέξης, στην μορφή (firstLetter, wordLength)
         val firstWordLetters = txtFile.flatMap(line => line.split(" "))
-            // filter all words starting with number and is empty
+            // Φιλτράρισμα των λέξεων που αρχίζουν με αριθμό ή είναι κενές
             .filter(word => !word.matches("^[0-9].*") && word.nonEmpty)
-            // map word to (firstLetter, word length)
+            // Δημιουργία ζευγών με το πρώτο γράμμα της λέξης και το μέγεθος της σε χαρακτήρες (firstLetter, word length)
             .map(word => (word.charAt(0), word.length))
 
         // Υπολογισμός του μέσου όρου του μήκους των λέξεων για κάθε γράμμα
@@ -31,8 +31,7 @@ object WordAverage {
             .mapValues(sumAndCount => f"${sumAndCount._1.toDouble / sumAndCount._2.toDouble}%.1f") // Υπολογισμός μέσου όρου, με βάση τα sumOfLengths, countOfWords
 
         // Τελική ταξινόμηση και εξαγωγή σε αρχείο
-        averageLengths.sortByKey()
-            .saveAsTextFile(outputDir)
+        averageLengths.sortByKey().saveAsTextFile(outputDir)
 
         sc.stop()
     }
